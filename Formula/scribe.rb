@@ -5,24 +5,25 @@
 class Scribe < Formula
   desc "LLM-managed personal knowledge base tooling"
   homepage "https://github.com/oliver-kriska/scribe"
-  version "0.1.4"
+  version "0.1.5"
   license "MIT"
 
   depends_on "git"
+  depends_on "neilberkman/tap/ccrider"
   depends_on "sqlite"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.4/scribe_0.1.4_darwin_amd64.tar.gz"
-      sha256 "6950a59753b8e914f2a5fbd67f73128c16bc85769851ba78f1024f293d9fdfb3"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.5/scribe_0.1.5_darwin_amd64.tar.gz"
+      sha256 "4bf335612c80fd51ca74a789ecaff50736e2c501a6ebb1f602e3118ac8e1815a"
 
       define_method(:install) do
         bin.install "scribe"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.4/scribe_0.1.4_darwin_arm64.tar.gz"
-      sha256 "154957b823ed3ff6e68b408f7db1d727165e74f79b61bc74de4d4093c9f6cb35"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.5/scribe_0.1.5_darwin_arm64.tar.gz"
+      sha256 "ef312e2c5ccf3c815cb853f7a17be35136f7ad5cdaddedb2dd136b8d135bc78a"
 
       define_method(:install) do
         bin.install "scribe"
@@ -32,33 +33,58 @@ class Scribe < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.4/scribe_0.1.4_linux_amd64.tar.gz"
-      sha256 "9f275a27d8c74bb4bf8d90eff7ece9977dc6d42936c39b46631a22252f04be2e"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.5/scribe_0.1.5_linux_amd64.tar.gz"
+      sha256 "182a16a676c02ed7f0bf30f0df56f0713e9f89053546b686b1ccb9c87ad565b3"
       define_method(:install) do
         bin.install "scribe"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.4/scribe_0.1.4_linux_arm64.tar.gz"
-      sha256 "e34428f061abbf62060583d89487e56b0ace49f67ff495b4f766050a8e684057"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.5/scribe_0.1.5_linux_arm64.tar.gz"
+      sha256 "db45e7c0eda853b4e2b6de55547b9829c03e414a41ef43f27ac633daec76d311"
       define_method(:install) do
         bin.install "scribe"
       end
     end
   end
 
+  def post_install
+    return unless OS.mac?
+    ohai "Homebrew upgraded scribe."
+    ohai "If iMessage capture was working before, macOS Full Disk Access"
+    ohai "is now invalidated (TCC is keyed to the binary cdhash, not the"
+    ohai "install path). Re-run:  scribe fda"
+  end
+
   def caveats
     <<~EOS
-      scribe expects several runtime dependencies beyond brew-installed ones:
+      Runtime dependencies not on Homebrew — install these separately:
         * claude     (Claude Code CLI)
-        * ccrider    (Claude session recorder)
+                     curl -fsSL https://claude.ai/install.sh | bash
         * qmd        (semantic search over the KB)
-        * trafilatura, jq, fzf (optional)
+                     npm install -g @tobilu/qmd
+        * trafilatura (optional, URL → markdown)
+                     pipx install trafilatura
+        * jq, fzf    (optional)
+                     brew install jq fzf
+
+      Already installed by brew as dependencies: git, sqlite, ccrider.
 
       After installing:
         scribe init --path ~/my-kb
-        scribe cron install
-        # macOS: grant Full Disk Access to the scribe binary for capture.
+        scribe cron install           # macOS: LaunchAgents
+                                      # Linux: prints crontab lines
+
+      macOS — Full Disk Access for `scribe capture` (iMessage):
+        scribe fda                    # opens the FDA pane and walks you through
+                                      # drag-and-drop from Finder is the most
+                                      # reliable method on macOS 14+
+
+      Heads-up: until scribe ships with Developer ID codesigning, the FDA
+      grant is tied to the Cellar path + binary cdhash, which both change
+      on every `brew upgrade scribe`. After an upgrade, `scribe capture`
+      will start failing with "operation not permitted" — just re-run
+      `scribe fda`. `scribe doctor` flags this situation explicitly.
     EOS
   end
 
