@@ -5,7 +5,7 @@
 class Scribe < Formula
   desc "LLM-managed personal knowledge base tooling"
   homepage "https://github.com/oliver-kriska/scribe"
-  version "0.1.2"
+  version "0.1.3"
   license "MIT"
 
   depends_on "git"
@@ -13,16 +13,16 @@ class Scribe < Formula
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.2/scribe_0.1.2_darwin_amd64.tar.gz"
-      sha256 "d9a02e5782cfe9f9be715e9ce19ffc75fcd9ff89b5322dba7c8fb3f3a4a7c9e3"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.3/scribe_0.1.3_darwin_amd64.tar.gz"
+      sha256 "024f86d0362e063f2384cda2abfe4fb31a8ac510aafda3fff692dec878e5adc7"
 
       define_method(:install) do
         bin.install "scribe"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.2/scribe_0.1.2_darwin_arm64.tar.gz"
-      sha256 "69627f55bf7f861ec56268b84e760c10d8e8452dcbbaead0523492344df53858"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.3/scribe_0.1.3_darwin_arm64.tar.gz"
+      sha256 "cc19f804bb71dbf7175a19d0fcca6bbaf838c215ec3d3dcff57fa971f614662f"
 
       define_method(:install) do
         bin.install "scribe"
@@ -32,15 +32,15 @@ class Scribe < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.2/scribe_0.1.2_linux_amd64.tar.gz"
-      sha256 "11217e1cf1488e0ef5d90f7f3de20af8a0bd01fcf0d9f90a8b813ce792a9b81f"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.3/scribe_0.1.3_linux_amd64.tar.gz"
+      sha256 "805e695ecec2073cdde81a8c77e4aeb4c898ca236fc695ba90c2bd130acbb60f"
       define_method(:install) do
         bin.install "scribe"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.2/scribe_0.1.2_linux_arm64.tar.gz"
-      sha256 "0bf19831c7309f2ab6abe4c85cd8afdf2f4e3ebd5e70473ba31dfbcdd4457975"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.1.3/scribe_0.1.3_linux_arm64.tar.gz"
+      sha256 "3f8c3d18fd61a255981442b0310e6b066dc07e954dab05c6bea8b70d8aab5b5a"
       define_method(:install) do
         bin.install "scribe"
       end
