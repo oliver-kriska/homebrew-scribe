@@ -5,7 +5,7 @@
 class Scribe < Formula
   desc "LLM-managed personal knowledge base tooling"
   homepage "https://github.com/oliver-kriska/scribe"
-  version "0.3.0"
+  version "0.4.0"
   license "MIT"
 
   depends_on "git"
@@ -14,16 +14,16 @@ class Scribe < Formula
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.3.0/scribe_0.3.0_darwin_amd64.tar.gz"
-      sha256 "9e352884ecb065bd0c040dc463db4afd0c1064689aaa58f1c8720576f764051d"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.4.0/scribe_0.4.0_darwin_amd64.tar.gz"
+      sha256 "6cfed45e2e388c19ecf36a1fed1497997b3b472423b561e738632d89fc696c68"
 
       define_method(:install) do
         bin.install "scribe"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.3.0/scribe_0.3.0_darwin_arm64.tar.gz"
-      sha256 "a94c22a55c33db6a1b531139507b7bef64f398b3d8cb690f28e9d98b819de685"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.4.0/scribe_0.4.0_darwin_arm64.tar.gz"
+      sha256 "7f428b9a6a02f65ce5479fa286e0b96191fb021fd67dccf2aeab0c40a605c4ff"
 
       define_method(:install) do
         bin.install "scribe"
@@ -33,15 +33,15 @@ class Scribe < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.3.0/scribe_0.3.0_linux_amd64.tar.gz"
-      sha256 "0751b1da93fac3504751d4f4c88faf6529abdfe2135414df5346a9a434cc2f20"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.4.0/scribe_0.4.0_linux_amd64.tar.gz"
+      sha256 "324dd344f2b46e0b89abf71fcbeebba5030ea48170b82a9a6afaf2bfb124f2f8"
       define_method(:install) do
         bin.install "scribe"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.3.0/scribe_0.3.0_linux_arm64.tar.gz"
-      sha256 "e90b4fcf90cf91b5a99651f1c8a7a0b593540771c7a15c22a5932e7720528199"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.4.0/scribe_0.4.0_linux_arm64.tar.gz"
+      sha256 "592c4d26e8cbb7368600ea3e8f8702695fba6a912e5c529c43506367fc8b11b6"
       define_method(:install) do
         bin.install "scribe"
       end
@@ -54,6 +54,19 @@ class Scribe < Formula
     ohai "If iMessage capture was working before, macOS Full Disk Access"
     ohai "is now invalidated (TCC is keyed to the binary cdhash, not the"
     ohai "install path). Re-run:  scribe fda"
+
+    # Self-heal already-installed LaunchAgents so a changed job set in
+    # this release (e.g. v0.4.0 adding dream-hot) lands without a
+    # manual `scribe cron install`. --if-installed is a silent no-op
+    # on fresh installs (no plists yet — see cmd/scribe/cron.go) and
+    # only rewrites plists it can prove it authored itself. Homebrew's
+    # `system` raises on a nonzero exit, and a cron/launchctl hiccup
+    # here must never abort the brew install — rescue and warn instead.
+    begin
+      system bin/"scribe", "cron", "install", "--if-installed"
+    rescue => e
+      opoo "scribe cron install --if-installed failed: #{e.message} (run it manually)"
+    end
   end
 
   def caveats
@@ -85,6 +98,12 @@ class Scribe < Formula
       on every `brew upgrade scribe`. After an upgrade, `scribe capture`
       will start failing with "operation not permitted" — just re-run
       `scribe fda`. `scribe doctor` flags this situation explicitly.
+
+      Upgrades already run `scribe cron install --if-installed` for you
+      (see below), so any new or changed scheduled job lands automatically
+      if you'd previously opted into cron — no manual step needed unless
+      you hand-edited a plist yourself, in which case adopt it back with
+      `scribe cron install --force`.
     EOS
   end
 
