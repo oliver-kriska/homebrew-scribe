@@ -5,7 +5,7 @@
 class Scribe < Formula
   desc "LLM-managed personal knowledge base tooling"
   homepage "https://github.com/oliver-kriska/scribe"
-  version "0.4.4"
+  version "0.5.0"
   license "MIT"
 
   depends_on "git"
@@ -14,16 +14,16 @@ class Scribe < Formula
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.4.4/scribe_0.4.4_darwin_amd64.tar.gz"
-      sha256 "fca681560dc2d54a4721ce16f70ff311df3b599b71a0f3dbc44abb0e837e934d"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.0/scribe_0.5.0_darwin_amd64.tar.gz"
+      sha256 "afccfcc4087d32c6c863cb1b66e6107b053e89063cb240e6487b09b8519e0f40"
 
       define_method(:install) do
         bin.install "scribe"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.4.4/scribe_0.4.4_darwin_arm64.tar.gz"
-      sha256 "5a897e7861f8674d88f9b7d9a5997636afbb3b7b1a39c2018088f842d73d736f"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.0/scribe_0.5.0_darwin_arm64.tar.gz"
+      sha256 "4f0f74f582268dce35766130d96e94aed4bc40080c118ce39d24bacd09ac13ca"
 
       define_method(:install) do
         bin.install "scribe"
@@ -33,15 +33,15 @@ class Scribe < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.4.4/scribe_0.4.4_linux_amd64.tar.gz"
-      sha256 "45c0f54f88131b4b3b052ef7613f3a62cf6007c02e6ff4dc3dd83b182e94f63e"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.0/scribe_0.5.0_linux_amd64.tar.gz"
+      sha256 "67aa7a28e3031b86549f15d3d075ffd5bdd853dcbb832f349c835f4a6644beb8"
       define_method(:install) do
         bin.install "scribe"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.4.4/scribe_0.4.4_linux_arm64.tar.gz"
-      sha256 "81f5ebb14b10176d313b29034fd729b226305bb5c8d4f2c733e01f2d50014cf5"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.0/scribe_0.5.0_linux_arm64.tar.gz"
+      sha256 "f65c41ef244a1f0de335a106324838e62650d209c9c3f52955cb1188e85dae1d"
       define_method(:install) do
         bin.install "scribe"
       end
@@ -83,9 +83,13 @@ class Scribe < Formula
       Already installed by brew as dependencies: git, sqlite, ccrider.
 
       After installing:
-        scribe init --path ~/my-kb
+        scribe init --path ~/my-kb --bind
+        cd ~/my-kb && scribe skill install
         scribe cron install           # macOS: LaunchAgents
                                       # Linux: prints crontab lines
+        scribe doctor
+
+      Personal, Ollama, hosted, and team recipes: https://getscribe.dev/setup.md
 
       macOS — Full Disk Access for `scribe capture` (iMessage):
         scribe fda                    # opens the FDA pane and walks you through
