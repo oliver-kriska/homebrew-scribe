@@ -5,25 +5,24 @@
 class Scribe < Formula
   desc "LLM-managed personal knowledge base tooling"
   homepage "https://github.com/oliver-kriska/scribe"
-  version "0.5.3"
+  version "0.5.4"
   license "MIT"
 
   depends_on "git"
-  depends_on "neilberkman/tap/ccrider"
   depends_on "sqlite"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.3/scribe_0.5.3_darwin_amd64.tar.gz"
-      sha256 "25ca4510735478953479fa9adaaf03f5a3208dbade2df5a19665e5e7bf1b2317"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.4/scribe_0.5.4_darwin_amd64.tar.gz"
+      sha256 "5198baaa727abfd0ab41f16b6fb02fc7a998bd3eedf6637a9a6a1ac9ff3ed18d"
 
       define_method(:install) do
         bin.install "scribe"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.3/scribe_0.5.3_darwin_arm64.tar.gz"
-      sha256 "550b57e3cb08cbb51c4e2a502e2be1765cc32d430aa854b34ef276964387965c"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.4/scribe_0.5.4_darwin_arm64.tar.gz"
+      sha256 "525348760aa988e51b12f79add6c2ace2d962f067da93f902558c0de05a98247"
 
       define_method(:install) do
         bin.install "scribe"
@@ -33,15 +32,15 @@ class Scribe < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.3/scribe_0.5.3_linux_amd64.tar.gz"
-      sha256 "18cf2df741713edf04ff475d955e64b74df4f2a14c379db071c97a6112f1ed4e"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.4/scribe_0.5.4_linux_amd64.tar.gz"
+      sha256 "46f35d23925b9aabb6c6ba0b8b8153cd4e548c0db3867cf337859194e5f3ca1b"
       define_method(:install) do
         bin.install "scribe"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.3/scribe_0.5.3_linux_arm64.tar.gz"
-      sha256 "49f2b863608b4be7edcddb8a72dc4bf052edd2a86d8c51a9c9ac70f67e60c1be"
+      url "https://github.com/oliver-kriska/scribe/releases/download/v0.5.4/scribe_0.5.4_linux_arm64.tar.gz"
+      sha256 "596d7b1638a8c5f65832e05f2f4f68103648b80207d567cd106c49e2e3e74361"
       define_method(:install) do
         bin.install "scribe"
       end
@@ -60,7 +59,12 @@ class Scribe < Formula
         * jq, fzf    (optional)
                      brew install jq fzf
 
-      Already installed by brew as dependencies: git, sqlite, ccrider.
+      Already installed by brew as dependencies: git, sqlite.
+
+      Required, install separately (a cask, so brew cannot pull it in as a
+      dependency):
+        * ccrider    (session database for `scribe triage`)
+                     brew install --cask neilberkman/tap/ccrider
 
       After installing:
         scribe init --path ~/my-kb --bind
